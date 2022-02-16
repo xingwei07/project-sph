@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>节流</title>
+  <script src="./js/lodash.js"></script>
+</head>
+
+<body>
+  计数器：<span>0</span><br><br>
+  <button>点我加1</button>
+
+  <script>
+    // 节流：在规定的时间范围内不会重复触发回调，只有大于这个时间间隔才会触发回调，把频繁触发变为少量触发
+    let count = 0;
+    let span = document.querySelector("span");
+    let button = document.querySelector("button");
+
+    // button.onclick = function () {
+    //   span.innerHTML = ++count;
+    // }
+    // 计数器：在一秒之内数字只能加上1
+    // 用户操作很频繁，但是把频繁的操作变为少量操作【可以给浏览器充裕的时间去解析代码】
+    button.onclick = _.throttle(function () {
+      span.innerHTML = ++count;
+    }, 5000)
+  </script>
+</body>
+
+</html>
