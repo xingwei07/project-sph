@@ -19,6 +19,11 @@ const service = axios.create({
 service.interceptors.request.use(
   // config：配置对象，对象里面有一个属性很重要，header请求头
   (config) => {
+    if (config.method === 'post') {
+      if (config.data === undefined || config.data === '' || config.data === null) {
+        config.data = {}
+      }
+    }
     nprogress.start()
     return config
   },
@@ -42,17 +47,17 @@ service.interceptors.response.use(
 // 封装 GET 请求
 export function get (url) {
   return service.request({
-    methods: 'GET',
+    method: 'GET',
     url
   })
 }
 
 // 封装 POST 请求
-export function post (url, params) {
+export function post (url, data) {
   return service.request({
-    methods: 'POST',
+    method: 'POST',
     url,
-    params
+    data
   })
 }
 
