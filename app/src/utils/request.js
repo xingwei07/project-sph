@@ -19,6 +19,7 @@ const service = axios.create({
 service.interceptors.request.use(
   // config：配置对象，对象里面有一个属性很重要，header请求头
   (config) => {
+    // post请求的参数至少是一个空对象
     if (config.method === 'post') {
       if (config.data === undefined || config.data === '' || config.data === null) {
         config.data = {}

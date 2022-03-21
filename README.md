@@ -613,11 +613,13 @@ goSearch (event) {
      }
      ```
 
-- 6.开发 Floor 组件
+# Day05
+
+- 1.开发 Floor 组件
 
   1. v-for 也可以在自定义标签中使用
   2. 组件间通信的方式：（面试频率极高）
-     ```js
+     ```
      props：用于父子组件通信
      自定义事件：$on $emit  可以实现子给父传递数据
      全局事件总线：$bus  任意组件间通信
@@ -626,11 +628,20 @@ goSearch (event) {
      vuex
      ```
 
-- 7.把首页中的轮播图拆分为全局组件
+- 2.把首页中的轮播图拆分为全局组件
   注册全局组件：`Vue.component(Carousel.name, Carousel)`
 
-- 8.开发 Search 模块
+- 3.开发 Search 模块
+
   1. 写静态界面 + 拆分组件
   2. 发请求（api）
   3. vuex 存储数据
   4. 动态展示数据
+
+  **getters：为了简化数据**
+
+  > ES6 合并对象：`Object.assign(Object1, Object2)`
+
+# Day06
+
+> $route 默认位于 data 中，可以直接使用

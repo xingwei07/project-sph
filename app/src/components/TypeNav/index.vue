@@ -200,8 +200,8 @@ export default {
         if (this.$route.params) {
           location.params = this.$route.params
         }
-        this.$router.push(location)
-        this.isShow = false
+        this.$router.push(location) // 路由跳转
+        this.isShow = false // 隐藏三级分类菜单
       }
     }
   }

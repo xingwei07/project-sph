@@ -11,10 +11,10 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">
+              {{ searchParams.categoryName
+              }}<i @click="removeCategoryName">×</i>
+            </li>
           </ul>
         </div>
         <!--selector-->
@@ -45,19 +45,20 @@
               </ul>
             </div>
           </div>
+          <!-- 商品列表 -->
           <div class="goods-list">
             <ul class="yui3-g">
-              <li class="yui3-u-1-5">
+              <li class="yui3-u-1-5" v-for="good in goodsList" :key="good.id">
                 <div class="list-wrap">
                   <div class="p-img">
                     <a href="item.html" target="_blank"
-                      ><img src="./images/mobile01.png"
+                      ><img :src="good.defaultImg"
                     /></a>
                   </div>
                   <div class="price">
                     <strong>
                       <em>¥</em>
-                      <i>6088.00</i>
+                      <i>{{ good.price }}.00</i>
                     </strong>
                   </div>
                   <div class="attr">
@@ -65,9 +66,7 @@
                       target="_blank"
                       href="item.html"
                       title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】"
-                      >Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                      (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                      (A1699)</a
+                      >{{ good.title }}</a
                     >
                   </div>
                   <div class="commit">
@@ -86,7 +85,7 @@
                   </div>
                 </div>
               </li>
-              <li class="yui3-u-1-5">
+              <!-- <li class="yui3-u-1-5">
                 <div class="list-wrap">
                   <div class="p-img">
                     <img src="./images/mobile02.png" />
@@ -418,7 +417,7 @@
                     >
                   </div>
                 </div>
-              </li>
+              </li> -->
             </ul>
           </div>
           <!-- 分页 -->
@@ -542,18 +541,90 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import SearchSelecter from './SearchSelecter'
 export default {
   name: 'Search',
   components: {
     SearchSelecter
+  },
+  data () {
+    return {
+      // 查询参数
+      searchParams: {
+        category1Id: "", // 一级分类ID
+        category2Id: "", // 二级分类ID
+        category3Id: "", // 三级分类ID
+        categoryName: "", // 分类名称
+        keyword: "", // 关键词
+        order: "", // 排序
+        pageNo: 1, // 当前页
+        pageSize: 10, // 每页数量
+        props: [], // 售卖属性
+        trademark: "" // 品牌
+      }
+    }
+  },
+  // 在挂在之前调用一次，对请求的参数进行修改
+  beforeMount () {
+    // this.searchParams.category1Id = this.$route.query.category1Id
+    // this.searchParams.category2Id = this.$route.query.category2Id
+    // this.searchParams.category3Id = this.$route.query.category3Id
+    // this.searchParams.keyword = this.$route.params.keyword
+
+    // ES6 合并对象
+    // Object.assign(this.searchParams, this.$route.params, this.$route.query);
+  },
+  mounted () {
+    // 挂载完毕执行一次
+    // this.getData()
+  },
+  computed: {
+    ...mapGetters('searchStore', ['goodsList'])
+  },
+  watch: {
+    // 监听路由的信息是否发生变化
+    // $route () {
+    //   // 合并参数
+    //   Object.assign(this.searchParams, this.$route.params, this.$route.query);
+    //   this.getData()
+    // }
+    $route: {
+      immediate: true, // 加载完成默认执行一次
+      handler () {
+        // 重置参数
+        this.searchParams.category1Id = ""
+        this.searchParams.category2Id = ""
+        this.searchParams.category3Id = ""
+        // 参数赋值
+        Object.assign(this.searchParams, this.$route.params, this.$route.query);
+        // 发送请求
+        this.getData()
+      }
+    }
+  },
+  methods: {
+    // 获取搜索模块数据
+    getData () {
+      this.$store.dispatch('searchStore/getSearchInfo', this.searchParams)
+    },
+    // 删除分类的名字
+    removeCategoryName () {
+      this.searchParams.categoryName = ''
+      this.searchParams.category1Id = ''
+      this.searchParams.category2Id = ''
+      this.searchParams.category3Id = ''
+
+      this.$router.push({
+        name: 'Search',
+        // query: this.$route.query
+      })
+    }
   }
-  // 路由组件可以传递 props
-  // props: ['keyWords'],
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
 .main {
   margin: 10px 0;
   .py-container {
@@ -612,97 +683,6 @@ export default {
           }
           &:hover {
             color: #28a3ef;
-          }
-        }
-      }
-    }
-    .selector {
-      border: 1px solid #ddd;
-      margin-bottom: 5px;
-      overflow: hidden;
-      .logo {
-        border-top: 0;
-        margin: 0;
-        position: relative;
-        overflow: hidden;
-        .key {
-          padding-bottom: 87px !important;
-        }
-      }
-      .type-wrap {
-        margin: 0;
-        position: relative;
-        border-top: 1px solid #ddd;
-        overflow: hidden;
-        .key {
-          width: 100px;
-          background: #f1f1f1;
-          line-height: 26px;
-          text-align: right;
-          padding: 10px 10px 0 15px;
-          float: left;
-        }
-        .value {
-          overflow: hidden;
-          padding: 10px 0 0 15px;
-          color: #333;
-          margin-left: 120px;
-          padding-right: 90px;
-          .logo-list {
-            li {
-              float: left;
-              border: 1px solid #e4e4e4;
-              margin: -1px -1px 0 0;
-              width: 105px;
-              height: 52px;
-              text-align: center;
-              line-height: 52px;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              font-weight: 700;
-              color: #e1251b;
-              font-style: italic;
-              font-size: 14px;
-              img {
-                max-width: 100%;
-                vertical-align: middle;
-              }
-            }
-          }
-          .type-list {
-            li {
-              float: left;
-              display: block;
-              margin-right: 30px;
-              line-height: 26px;
-              a {
-                text-decoration: none;
-                color: #666;
-              }
-            }
-          }
-        }
-        .ext {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          .sui-btn {
-            display: inline-block;
-            padding: 2px 14px;
-            box-sizing: border-box;
-            margin-bottom: 0;
-            font-size: 12px;
-            line-height: 18px;
-            text-align: center;
-            vertical-align: middle;
-            cursor: pointer;
-            padding: 0 10px;
-            background: #fff;
-            border: 1px solid #d5d5d5;
-          }
-          a {
-            color: #666;
           }
         }
       }

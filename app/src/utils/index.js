@@ -17,3 +17,8 @@ export async function reqGetBannerList () {
 export async function reqGetFloorList () {
   return await get('/mock/floor')
 }
+
+// 获取搜索模块数据
+export async function reqGetSearchInfo (params) {
+  return await post('/api/list', params)
+}
